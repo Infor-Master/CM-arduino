@@ -3,14 +3,14 @@
 
 const int pinGreenLed = 13;
 const int pinRedLed = 12;
-const int pinServo = 11;
+const int pinServo01 = 11;
 
 CmdMessenger msg = CmdMessenger(Serial);
-Servo servo;
+Servo servo01;
 
 enum{
   CMD_SETLED = 0,     /* 0, led, state; */  
-  CMD_SERVO = 1       /* 1, angle(0~180) */
+  CMD_SERVO = 1       /* 1, servo, angle(0~180) */
 };
 
 void attachCommandCallbacks(){
@@ -34,8 +34,11 @@ void callbackOnLed(){
 }
 
 void callbackOnServo(){
+  String servoEnum = msg.readStringArg();
   int servoVal = msg.readInt16Arg();
-  servo.write(servoVal);
+  if(servoEnum.equals("servo01")){
+    servo01.write(servoVal);
+  }
 }
 
 void setup() {
@@ -44,7 +47,7 @@ void setup() {
   attachCommandCallbacks();
   pinMode(pinGreenLed, OUTPUT);
   pinMode(pinRedLed, OUTPUT);
-  servo.attach(pinServo);
+  servo01.attach(pinServo01);
 }
 
 void loop() {
